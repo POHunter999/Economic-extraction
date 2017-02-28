@@ -1,5 +1,7 @@
-# Economic-extraction
+﻿# Economic-extraction
 *肖老板布置的任务，2个星期内搞定*  
 目标：从经济类文档中，抽取某地域相关行业经济数据  
 数据来源：新闻、经济报告  
 结果形式：表格 csv  
+语言：python3.5  
+工具：结巴  
