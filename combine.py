@@ -95,21 +95,46 @@ def main(sentences):
     for w in a:
         fenci.append(w.word)
         flag.append(w.flag[0])   
-    final=findData(fenci,flag)    
+    final=findData(fenci,flag)
+    ts=""    
     for line in final.itertuples():
         
         zhuti1="".join(fenci[int(line[1])-2:int(line[1])])
         zhuti2="".join(fenci[int(line[1]):int(line[1]+1)])
         num="".join(fenci[int(line[1])+1:int(line[1])+3])
         tag1=jieba.analyse.extract_tags(zhuti1,1)
-        tag2=jieba.analyse.extract_tags(zhuti2,1)
+        tag2=jieba.analyse.extract_tags(zhuti2,1)       
+        if len(tag1)==1 and len(tag2)==1: 
+            if tag1[0] in shiti:
+                ts=tag1[0]
+                temp=pd.DataFrame([[ tag1[0],num]],columns=["项目", tag2[0] ])
+                df=df.append(temp)
+                com=pd.DataFrame([[ tag1[0]+tag2[0] ,num]],columns=["项目","值" ])
+                df2=df2.append(com)
+            elif tag2[0] in shiti:
+                ts=tag2[0]
+                temp=pd.DataFrame([[ tag2[0],num]],columns=["项目", tag1[0] ])
+                df=df.append(temp)
+                com=pd.DataFrame([[ tag2[0]+tag1[0] ,num]],columns=["项目","值" ])
+                df2=df2.append(com)
+            elif not(tag1[0] in shiti or tag2[0] in shiti):
+                location=int(line[1])
+                while not(fenci[location] in shiti):
+                    location=location-1
+                    if location==-1:
+                        tempshiti=ts
+                        break
+                    tempshiti=fenci[location]
 
-        
-        if len(tag1)==1 and len(tag2)==1:            
-            temp=pd.DataFrame([[ tag1[0],num]],columns=["项目", tag2[0] ])
-            df=df.append(temp)
-            com=pd.DataFrame([[ tag1[0]+tag2[0] ,num]],columns=["项目","值" ])
-            df2=df2.append(com)
+                                        
+                if tag1[0] in shuxing:
+                    com=pd.DataFrame([[tempshiti+tag2[0]+tag1[0] ,num]],columns=["项目","值" ])
+                    df2=df2.append(com)
+                elif tag2[0] in shuxing:
+                    com=pd.DataFrame([[tempshiti+tag1[0]+tag2[0] ,num]],columns=["项目","值" ])
+                    df2=df2.append(com)
+
+
 
         '''
         if line[2]=='nmm':
@@ -132,11 +157,29 @@ def main(sentences):
     return  df,df2
            
 def not_empty(s): return s and s.strip()
+def dropn(s):    
+    for i in range(len(s)):
+        s[i]=s[i].strip('\n')        
+    return s
 
-diction=['增加值', '增长', '支出', '增产','']
+shi=open('shiti.txt','r')
+shu=open('shuxing.txt','r')
 file = open('input.txt','r')
+
+
 text = file.readlines()
+shiti= shi.readlines()
+shuxing=shu.readlines()
+
+
 text=list(filter(not_empty, text))
+text=dropn(text)
+shiti=list(filter(not_empty, shiti))
+shiti=dropn(shiti)
+shuxing=list(filter(not_empty, shuxing))
+shuxing=dropn(shuxing)
+
+
 sent=[]
 '''
 for words in text:
