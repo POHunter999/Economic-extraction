@@ -66,15 +66,15 @@ def findData(fenci,flag):
     nmmDF=pd.DataFrame(nmm,columns=["location"])
     nmmDF['type']='nmm'
         
-    #vmx=findStrPosition(the,'vmx')
-    #vmxDF=pd.DataFrame(vmx,columns=["location"])
-    #vmxDF['type']='vmx'
+    vmx=findStrPosition(the,'vmx')
+    vmxDF=pd.DataFrame(vmx,columns=["location"])
+    vmxDF['type']='vmx'
            
     nvmm=findStrPosition(the,'vmm')
     nvmmDF=pd.DataFrame(nvmm,columns=["location"])
     nvmmDF['type']='nvmm'
     
-    final=(nmmDF.append(nvmmDF))
+    final=(nmmDF.append(nvmmDF)).append(vmxDF)
     '''
     for i in nmm:
         print("".join(fenci[i-2:i+3]))
@@ -161,10 +161,10 @@ def dropn(s):
     for i in range(len(s)):
         s[i]=s[i].strip('\n')        
     return s
-
+file = open('input.txt','r')
 shi=open('shiti.txt','r')
 shu=open('shuxing.txt','r')
-file = open('input.txt','r')
+
 
 
 text = file.readlines()
@@ -178,17 +178,8 @@ shiti=list(filter(not_empty, shiti))
 shiti=dropn(shiti)
 shuxing=list(filter(not_empty, shuxing))
 shuxing=dropn(shuxing)
-
-
-sent=[]
-'''
-for words in text:
-    aaa=cut_sentence(words)
-    sent = sent+aaa
-'''
 dff1=pd.DataFrame()
 dff2=pd.DataFrame()
-
 for sentences in text:    
     df1,df2=main(str(sentences))
     dff1=dff1.append(df1)
