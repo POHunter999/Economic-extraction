@@ -5,7 +5,7 @@ Created on Thu Mar  2 11:00:06 2017
 @author: POHunter
 """
 
-#sentences=" 2015年，全省加快转变农业发展方式，全力打造高原特色现代农业，全年全省农林牧渔业总产值保持了稳定增长，粮食产量再创新高。2015年全省农林牧渔业总产值完成3383.09亿元，同比增长6.0%；完成增加值2098.19亿元，增加值总量在全国排第14位，同比增长6.0%，其中：农业增加值1230.75亿元，增长5.7%；林业增加值216.11亿元，增长10.3%；牧业增加值559.98亿元，增长4.3%；渔业增加值48.88亿元，增长8.8%。农林牧渔服务业增加值42.48亿元，增长10.2%。2015年，全省粮食生产实现了总量增及单产同步增长态势，粮食产量为1876.4万吨，比2014年增产15.7万吨，增长0.84%，实现连续十三年增长粮食综合平均单产278.8公斤，比2014年增加3.6公斤，同比增长1.3%。2015年，全省高原特色农业形势良好，特色经济作物量效齐升，茶叶、水果、花卉等价格上涨明显，橡胶、咖啡及核桃种植面积和产量继续保持全国第一，粮油、肉类、蔬菜、水产品等都获得较好收成。"
+
 import pandas as pd
 import jieba
 import jieba.posseg as pseg
@@ -145,21 +145,24 @@ def main(sentences):
             print("".join(fenci[int(line[1]):int(line[1])+3])+'vmx')
         '''
     return  df,df2
-           
+#去除列表中的空值           
 def not_empty(s): return s and s.strip()
+#去除列表末尾的\n
 def dropn(s):    
     for i in range(len(s)):
         s[i]=s[i].strip('\n')        
     return s
-file = open('input.txt','r')
-shi=open('shiti.txt','r')
-shu=open('shuxing.txt','r')
+    
+    
+file = open('input.txt','r')#目标文本
+shi=open('shiti.txt','r')#人工定义的实体
+shu=open('shuxing.txt','r')#人工定义的属性
 
 
 
-text = file.readlines()
-shiti= shi.readlines()
-shuxing=shu.readlines()
+text = file.readlines()#该列表按段读入目标文章
+shiti= shi.readlines()#该列表存储实体
+shuxing=shu.readlines()#该列表存储属性
 
 
 text=list(filter(not_empty, text))
@@ -168,6 +171,8 @@ shiti=list(filter(not_empty, shiti))
 shiti=dropn(shiti)
 shuxing=list(filter(not_empty, shuxing))
 shuxing=dropn(shuxing)
+
+
 dff1=pd.DataFrame()
 dff2=pd.DataFrame()
 for sentences in text:    
